@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 export default function Component() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <header className="text-4xl font-bold mb-10 text-center text-gray-800 dark:text-gray-200 w-full">
+      <header className="text-4xl font-bold mb-10 text-center text-gray -800 dark:text-gray-200 w-full">
         Document Reader
       </header>
       <main className="grid lg:grid-cols-2 gap-6 items-start max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full">
