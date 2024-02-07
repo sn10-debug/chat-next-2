@@ -34,6 +34,37 @@ const handleFileUpload = () => {
 };
 
 
+const translateText = async (text:string) => {
+  const key = "f3a47cba04864b638e74f100019a703b";
+  const endpoint = "https://api.cognitive.microsofttranslator.com";
+  const location = "southeastasia";
+
+  try {
+      const response = await fetch(
+          `${endpoint}/translate?api-version=3.0&from=en&to=or`,
+          {
+              method: 'POST',
+              headers: {
+                  'Ocp-Apim-Subscription-Key': key,
+                  'Ocp-Apim-Subscription-Region': location,
+                  'Content-type': 'application/json',
+              },
+              body: JSON.stringify([{ text: text }])
+          }
+      );
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result[0]['translations'][0]['text'];
+  } catch (error) {
+      console.error(`Translation error: ${error}`);
+  }
+};
+
+
 
 
 
@@ -72,7 +103,10 @@ let prompt="";
   const result = await model.generateContent([prompt, ...imageParts]);
   const response = await result.response;
   const text = response.text();
-  setTextData(text);
+  let translatedText = await translateText(text);
+  setTextData(translatedText);
+  
+
 
 }
 
