@@ -17,7 +17,7 @@ export default function Component() {
   const API_KEY=process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
   const AZURE_KEY=process.env.NEXT_PUBLIC_AZURE_KEY;
   const HUGGING_KEY=process.env.NEXT_PUBLIC_HUGGING_FACE_KEY;
-  const genAI = new GoogleGenerativeAI(API_KEY);
+  const genAI = new GoogleGenerativeAI(API_KEY ? API_KEY : "");
   let [selectedFile, setSelectedFile] = useState(null);
   let [readData, setReadData] = useState(null);
   let [summarizeData, setSummarizeData] = useState(null);
