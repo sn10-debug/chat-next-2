@@ -55,7 +55,7 @@ const translateText = async (text:string) => {
           {
               method: 'POST',
               headers: {
-                  'Ocp-Apim-Subscription-Key': key,
+                  'Ocp-Apim-Subscription-Key': key ? key : "",
                   'Ocp-Apim-Subscription-Region': location,
                   'Content-type': 'application/json',
               },
