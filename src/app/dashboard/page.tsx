@@ -18,12 +18,16 @@ export default function Component() {
   const AZURE_KEY=process.env.NEXT_PUBLIC_AZURE_KEY;
   const HUGGING_KEY=process.env.NEXT_PUBLIC_HUGGING_FACE_KEY;
   const genAI = new GoogleGenerativeAI(API_KEY ? API_KEY : "");
-  let [selectedFile, setSelectedFile] = useState(null);
+  let [selectedFile, setSelectedFile] =  useState<any>('');
   let [readData, setReadData] = useState(null);
   let [summarizeData, setSummarizeData] = useState(null);
   let [textData, setTextData] = useState("The text output will be displayed here...");
   let [fileName, setFileName] = useState("No file selected");
 
+  interface selectedFile {
+    name: string;
+    type: string;
+  }
 
   const handleFileChange = (event:any) => {
     // Get the file from the event target (input element)
@@ -77,23 +81,23 @@ const translateText = async (text:string) => {
 // Converts a File object to a GoogleGenerativeAI.Part object.
 
 
-async function run(mode) {
+async function run(mode:string) {
   // For text-and-images input (multimodal), use the gemini-pro-vision model
 
-  async function fileToGenerativePart(file: File) {
-    const base64EncodedDataPromise = new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader?.result?.split(',')[1] );
-      reader.readAsDataURL(file);
-    });
-    return {
-      inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
-    };
-  }
-  
+    async function fileToGenerativePart(file: File) {
+      const base64EncodedDataPromise = new Promise<string>((resolve) => { // Explicitly typecast the promise to string
+        const reader = new FileReader();
+        reader.onloadend = () => resolve((reader?.result as string)?.split(',')[1] ); // Typecast reader.result to string
+        reader.readAsDataURL(file);
+      });
+      return {
+        inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
+      };
+    }
+    
 
-  const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
-let prompt="";
+    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+  let prompt="";
   if (mode==="read")
     prompt="Read the document and extract the text from it";
   else prompt="Summarize the text from the document";
@@ -101,7 +105,7 @@ let prompt="";
   const fileInputEl = document.getElementById('file-upload') as HTMLInputElement;
   setFileName(selectedFile.name);
   const imageParts = await Promise.all(
-    [...fileInputEl.files].map(fileToGenerativePart)
+    fileInputEl.files ? [...(fileInputEl.files as any)].map(fileToGenerativePart) : []
   );
 
   
